@@ -1,39 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 public class Wand : MonoBehaviour
 {
     public GameObject wandHeadPoint;
+    [HideInInspector]
+    public SteamVR_Action_Boolean castAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Teleport");
 
     private Transform wandHeadTransform;
     private Vector3 headPos;
     private Vector3 prevHeadPos;
+    private Hand hand;
 
-    float wandSpeed = 0;
+    private float wandSpeed = 0;
 
-    float wandCharge = 0;
-    float maxCharge = 100;
+    private float wandCharge = 0;
+    private float maxCharge = 100;
 
-    bool isHeld = false;
-    bool isMoving = false;
-    bool isCharging = false;
-    bool isCharged = false;
+    [HideInInspector]
+    public bool canFire = false;
+    private bool isHeld = false;
+    private bool isMoving = false;
+    private bool isCharging = false;
+    private bool isCharged = false;
 
     public ParticleSystem[] chargingSystems;
     public ParticleSystem[] chargedSystems;
 
-    // Start is called before the first frame update
     void Start()
     {
         stopParticles(chargingSystems);
         stopParticles(chargedSystems);
-
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnAttachedToHand(Hand attachedHand)
+    {
+        hand = attachedHand;
+    }
+
+    private void Update()
     {
         wandHeadTransform = wandHeadPoint.transform;
         headPos = transform.TransformPoint(wandHeadTransform.position);
@@ -64,6 +72,7 @@ public class Wand : MonoBehaviour
 
     void wandCharged()
     {
+        canFire = true;
         isCharged = true;
         isCharging = false;
         stopParticles(chargingSystems);
@@ -123,5 +132,25 @@ public class Wand : MonoBehaviour
         }
     }
 
-    
+    public void CastSpell()
+    {
+        resetCharge();
+        Debug.Log("Wand: " + transform.forward);
+
+        canFire = false;
+    }
+
+    void resetCharge()
+    {
+        wandCharge = 0;
+        isCharged = false;
+        isCharging = true;
+        stopParticles(chargedSystems);
+        playParticles(chargingSystems);
+    }
+
+    public bool WasCastButtonReleased()
+    {
+        return castAction.GetStateUp(hand.handType);     
+    }
 }
