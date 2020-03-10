@@ -135,7 +135,6 @@ public class Wand : MonoBehaviour
     public void CastSpell()
     {
         resetCharge();
-        Debug.Log("Wand: " + transform.forward);
 
         canFire = false;
     }
@@ -147,6 +146,11 @@ public class Wand : MonoBehaviour
         isCharging = true;
         stopParticles(chargedSystems);
         playParticles(chargingSystems);
+    }
+
+    public float getWandCharge()
+    {
+        return wandCharge;
     }
 
     public bool WasCastButtonReleased()

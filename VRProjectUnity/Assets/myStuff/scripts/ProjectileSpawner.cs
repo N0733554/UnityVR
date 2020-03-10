@@ -6,18 +6,16 @@ using Valve.VR;
 public class ProjectileSpawner : MonoBehaviour
 {
     public Wand wand;
-    public Transform projectile;
+    public GameObject[] projectiles;
 
     void Update()
     {
         if(wand.canFire && wand.WasCastButtonReleased())
         {
             wand.CastSpell();
-            if(projectile != null)
+            if(projectiles[0] != null)
             {
-                Debug.Log("ProjectileSpawner: " + transform.forward);
-
-                Instantiate(projectile, transform.position, transform.rotation);
+                Instantiate(projectiles[0], transform.position, transform.rotation);
             }
             else
                 Debug.Log("Projectile Not Found!");

@@ -4,13 +4,8 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public Transform explosionPrefab;
+    public GameObject explosionPrefab;
     private Rigidbody rb;
-
-    public float explosionForce;
-    public float explosionRadius;
-    public float explosionUpforce;
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -23,7 +18,7 @@ public class Projectile : MonoBehaviour
         Vector3 position = contact.point;
         if (collision.gameObject.layer != 8)
         {
-            rb.AddExplosionForce(10, transform.position, 10, 1, ForceMode.Impulse);
+            Instantiate(explosionPrefab, transform.position, transform.rotation);
             Destroy(gameObject);
         }
     }
