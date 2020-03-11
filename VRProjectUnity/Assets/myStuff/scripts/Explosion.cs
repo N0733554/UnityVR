@@ -19,5 +19,6 @@ public class Explosion : MonoBehaviour
             if (rb)
                 rb.AddExplosionForce(power, explosionPosition, radius, upforce, ForceMode.Impulse);
         }
+        Destroy(gameObject, 6);
     }
 }
